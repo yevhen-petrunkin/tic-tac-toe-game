@@ -84,7 +84,7 @@ body {
   background-color: rgb(252, 131, 110);
 }
 
-.btn-cross {
+.btn {
   padding: 10px 20px;
   font-size: 20px;
   font-weight: bold;
@@ -100,8 +100,8 @@ body {
   transition: background-color 200ms linear, box-shadow 200ms linear;
 }
 
-.btn-cross:hover,
-.btn-cross:focus {
+.btn:hover,
+.btn:focus {
   background-color: rgba(0, 128, 128, 0.685);
   box-shadow: 1px 1px 2px black;
 }

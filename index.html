@@ -11,10 +11,16 @@
     <div class="container">
       <h1 class="heading">TIC-TAC-TOE</h1>
       <div class="controls"></div>
+      <form class="select">
+        <label><input type="radio" name="players" value="one" checked />1 player</label>
+        <label><input type="radio" name="players" value="two" />2 players</label>
+        <button class="btn btn--start" type="submit">Start</button>
+      </form>
       <div class="field">
         <div class="box"></div>
       </div>
     </div>
     <script defer type="module" src="./ttc.js"></script>
+    <script defer type="module" src="./game-obj.js"></script>
   </body>
 </html>

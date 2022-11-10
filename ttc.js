@@ -1,132 +1,94 @@
-// const boxEl = document.querySelector('.box');
-// const resetBtnEl = document.querySelector('.btn-cross');
+import { ttcGame } from './game-obj.js';
 
-// let player = 'X';
+const {
+  winCombos,
+  startMessage,
+  startGameMessage,
+  undefinedPlayersMessage,
+  xPlayerAlert,
+  oPlayerAlert,
+} = ttcGame;
 
-// let markup = '';
+console.log('ttGame =', ttcGame);
 
-// const winner = [
-//   [1, 2, 3],
-//   [4, 5, 6],
-//   [7, 8, 9],
-//   [1, 4, 7],
-//   [2, 5, 8],
-//   [3, 6, 9],
-//   [1, 5, 9],
-//   [3, 5, 7],
-// ];
+// =============STARTING VARIABLES================
 
-// for (let i = 1; i <= 9; i += 1) {
-//   markup += `<div class="item" data-id="${i}"></div>`;
-// }
+let screenText = '';
+let playersNum = '';
+let boxMarkup = '';
+let player = 'X';
+let cells = [];
+let maxCell = 0;
+let minCell = 0;
+let turnsX = [];
+let turnsO = [];
+let positionNumberO = 0;
+let cellRef = '';
 
-// boxEl.insertAdjacentHTML('beforeend', markup);
-
-// let playerX = [];
-// let playerO = [];
-
-// const onBoxElClick = e => {
-//   console.log(e.target);
-//   if (e.target.textContent) {
-//     return;
-//   }
-
-//   e.target.textContent = player;
-
-//   const position = e.target.dataset.id;
-//   if (player === 'X') {
-//     playerX.push(Number(position));
-//     const finish = playerX.length < 3 ? false : isWinner(playerX);
-//     setTimeout(() => {
-//       if (finish) {
-//         alert(`Player ${player} Wins`);
-//         onResetBtnClick();
-//         return;
-//       }
-//       player = 'O';
-//     });
-//   } else {
-//     playerO.push(Number(position));
-//     const finish = playerO.length < 3 ? false : isWinner(playerO);
-//     setTimeout(() => {
-//       if (finish) {
-//         alert(`Player ${player} Wins`);
-//         onResetBtnClick();
-//         return;
-//       }
-//       player = 'X';
-//     });
-//   }
-// };
-
-// function isWinner(arr) {
-//   return winner.some(el => el.every(item => arr.includes(item)));
-// }
-
-// function onResetBtnClick() {
-//   boxEl.innerHTML = markup;
-//   player = 'X';
-//   playerX = [];
-//   playerO = [];
-// }
-
-// boxEl.addEventListener('click', onBoxElClick);
-// resetBtnEl.addEventListener('click', onResetBtnClick);
+// ==================SELECTORS====================
 
 const controlsRef = document.querySelector('.controls');
 const boxRef = document.querySelector('.field > .box');
+const selectFormRef = document.querySelector('.select');
+// const startBtnRef = document.querySelector('.btn--start');
 
-const winCombos = [
-  [1, 2, 3],
-  [4, 5, 6],
-  [7, 8, 9],
-  [1, 4, 7],
-  [2, 5, 8],
-  [3, 6, 9],
-  [1, 5, 9],
-  [3, 5, 7],
-];
+// ===================RUNNING=====================
 
-let player = 'X';
-let turnsX = [];
-let turnsY = [];
-let boxMarkup = '';
+createControls(startMessage);
 
-const createControls = entry => {
-  controlsRef.innerHTML = `<button class="btn-cross" type="button">Restart</button>
-<div class="screen"><span>${entry}</span></div>`;
-  const restartBtn = document.querySelector('button.btn-cross');
-  restartBtn.addEventListener('click', onRestart);
-  return;
-};
-
-const createBox = () => {
-  for (let i = 1; i <= 9; i += 1) {
-    boxMarkup += `<div class="item" data-id="${i}"></div>`;
-  }
-  boxRef.insertAdjacentHTML('beforeend', boxMarkup);
-  return boxMarkup;
-};
-
-createControls('New Game Player X Starts');
 createBox();
 
-const isWinner = (array, turns) =>
-  array.some(combo => combo.every(number => turns.includes(number)));
+// ===============EVENT LISTENERS=================
 
-function onRestart() {
-  boxRef.innerHTML = boxMarkup;
-  player = 'X';
-  turnsX = [];
-  turnsY = [];
-  createControls('New Game Player X Starts');
+selectFormRef.addEventListener('submit', onStartBtnClick);
+boxRef.addEventListener('click', onBoxClick);
+
+// ==================FUNCTIONS====================
+
+function createControls(entry) {
+  controlsRef.innerHTML = `<button class="btn btn--restart" type="button">Restart</button>
+<div class="screen"><span class="screen__text">${entry}</span></div>`;
+  const restartBtn = document.querySelector('.btn--restart');
+  restartBtn.addEventListener('click', onRestart);
+  return (screenText = document.querySelector('.screen__text'));
 }
 
-const onBoxClick = e => {
-  const cellRef = e.target;
+function createBox() {
+  for (let i = 1; i <= 9; i += 1) {
+    boxMarkup += `<div class="item" data-id="${i}"></div>`;
+    cells.push(i);
+  }
+  console.log('cells =', cells);
+  boxRef.insertAdjacentHTML('beforeend', boxMarkup);
+  return boxMarkup;
+}
+
+function onStartBtnClick(evt) {
+  evt.preventDefault();
+  const selectFormElems = evt.currentTarget.elements;
+  console.log(selectFormElems.players.value);
+  screenText.textContent = startGameMessage;
+  return (playersNum = selectFormElems.players.value);
+}
+
+function isWinner(array, turns) {
+  return array.some(combo => combo.every(number => turns.includes(number)));
+}
+
+function onBoxClick(e) {
+  if (playersNum === '') {
+    screenText.textContent = undefinedPlayersMessage;
+    setTimeout(() => {
+      alert(undefinedPlayersMessage);
+      onRestart();
+    }, 300);
+    return;
+  }
+
+  cellRef = e.target;
   let cellPosition = cellRef.dataset.id;
 
-  if (e.target.textContent) {
+  if (cellRef.textContent) {
     return;
   }
 
@@ -138,29 +100,77 @@ const onBoxClick = e => {
     turnsX.push(Number(cellPosition));
     let result = turnsX.length < 3 ? false : isWinner(winCombos, turnsX);
     if (result) {
-      createControls('Player X Wins!');
+      createControls(xPlayerAlert);
       setTimeout(() => {
-        alert('Player X Wins!');
+        alert(xPlayerAlert);
         onRestart();
         return;
       }, 300);
     }
-    player = 'O';
-  } else {
-    cellRef.style.backgroundColor = 'gold';
-    createControls(`Player O plays position ${cellPosition}`);
-    turnsY.push(Number(cellPosition));
-    let result = turnsY.length < 3 ? false : isWinner(winCombos, turnsY);
-    if (result) {
-      createControls('Player O Wins!');
-      setTimeout(() => {
-        alert('Player O Wins!');
-        onRestart();
-        return;
-      }, 300);
-    }
-    player = 'X';
-  }
-};
 
-boxRef.addEventListener('click', onBoxClick);
+    player = 'O';
+
+    if (playersNum === 'one') {
+      const leftCells = cells.filter(cell => !turnsX.includes(cell) && !turnsO.includes(cell));
+      maxCell = Math.max(...leftCells);
+      minCell = Math.min(...leftCells);
+      do {
+        positionNumberO = Math.round(Math.random() * (maxCell - minCell) + minCell);
+      } while (turnsX.includes(positionNumberO) || turnsO.includes(positionNumberO));
+
+      setTimeout(() => {
+        cellRef = document.querySelector(`.item[data-id="${positionNumberO}"]`);
+        console.log('this is cellRef', cellRef);
+        cellRef.style.backgroundColor = 'gold';
+        cellRef.textContent = player;
+        createControls(`Player O plays position ${positionNumberO}`);
+        turnsO.push(positionNumberO);
+        let result = turnsO.length < 3 ? false : isWinner(winCombos, turnsO);
+
+        if (result) {
+          createControls(oPlayerAlert);
+          setTimeout(() => {
+            alert(oPlayerAlert);
+            onRestart();
+            return;
+          }, 300);
+        }
+      }, 500);
+      setTimeout(() => {
+        player = 'X';
+        return;
+      }, 500);
+    }
+  } else {
+    if (playersNum === 'two') {
+      cellRef.style.backgroundColor = 'gold';
+      createControls(`Player O plays position ${cellPosition}`);
+      turnsO.push(Number(cellPosition));
+      let result = turnsO.length < 3 ? false : isWinner(winCombos, turnsO);
+      if (result) {
+        createControls(oPlayerAlert);
+        setTimeout(() => {
+          alert(oPlayerAlert);
+          onRestart();
+          return;
+        }, 300);
+      }
+      player = 'X';
+    }
+  }
+}
+
+function onRestart() {
+  boxRef.innerHTML = boxMarkup;
+
+  player = 'X';
+
+  turnsX = [];
+  turnsO = [];
+  maxCell = 0;
+  minCell = 0;
+  playersNum = '';
+  positionNumberO = 0;
+
+  createControls(startMessage);
+}
