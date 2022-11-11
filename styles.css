@@ -126,7 +126,6 @@ body {
   width: 100%;
   min-height: 100px;
   padding: 20px 30px;
-  font-size: 20px;
   font-weight: bold;
   color: gold;
   text-align: center;
@@ -138,6 +137,12 @@ body {
   border-radius: 4px;
   box-shadow: 1px 1px 3px black;
   box-sizing: border-box;
+}
+
+@media screen and (min-width: 480px) {
+  .hero__screen {
+    font-size: 20px;
+  }
 }
 
 .controls,
