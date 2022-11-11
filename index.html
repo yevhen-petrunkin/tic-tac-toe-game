@@ -5,19 +5,58 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TTC</title>
+    <link rel="stylesheet" href="./modern-normalize.css" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <div class="container">
-      <h1 class="heading">TIC-TAC-TOE</h1>
-      <div class="controls"></div>
-      <form class="select">
-        <label><input type="radio" name="players" value="one" checked />1 player</label>
-        <label><input type="radio" name="players" value="two" />2 players</label>
-        <button class="btn btn--start" type="submit">Start</button>
-      </form>
+      <div class="hero">
+        <!-- <h1 class="hero__heading">TIC-TAC-TOE</h1>
+        <div class="hero__screen"><span class="screen__text">${entry}</span></div> -->
+      </div>
+      <div class="controls">
+        <!-- <form class="select">
+          <ul class="select__field list">
+            <li class="select__item">
+              <label class="select__label"
+                ><input
+                  class="select__input visually-hidden"
+                  type="radio"
+                  name="players"
+                  value="one"
+                  checked
+                />
+                <span class="select__radio"></span> 1 player</label
+              >
+            </li>
+            <li class="select__item">
+              <label class="select__label"
+                ><input
+                  class="select__input visually-hidden"
+                  type="radio"
+                  name="players"
+                  value="two"
+                /><span class="select__radio"></span>2 players</label
+              >
+            </li>
+          </ul>
+          <button class="select__btn btn" type="submit">Start</button>
+        </form>
+        <button class="controls__btn btn btn--restart" type="button">Restart</button> -->
+      </div>
+
       <div class="field">
-        <div class="box"></div>
+        <div class="field__box list">
+          <!-- <li class="field__cell"></li>
+          <li class="field__cell"></li>
+          <li class="field__cell"></li>
+          <li class="field__cell"></li>
+          <li class="field__cell"></li>
+          <li class="field__cell"></li>
+          <li class="field__cell"></li>
+          <li class="field__cell"></li>
+          <li class="field__cell"></li> -->
+        </div>
       </div>
     </div>
     <script defer type="module" src="./ttc.js"></script>

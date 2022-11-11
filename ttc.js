@@ -7,6 +7,7 @@ const {
   undefinedPlayersMessage,
   xPlayerAlert,
   oPlayerAlert,
+  drawGameAlert,
 } = ttcGame;
 
 console.log('ttGame =', ttcGame);
@@ -27,35 +28,42 @@ let cellRef = '';
 
 // ==================SELECTORS====================
 
+const heroRef = document.querySelector('.hero');
 const controlsRef = document.querySelector('.controls');
-const boxRef = document.querySelector('.field > .box');
-const selectFormRef = document.querySelector('.select');
+const boxRef = document.querySelector('.field__box');
+
 // const startBtnRef = document.querySelector('.btn--start');
 
 // ===================RUNNING=====================
 
-createControls(startMessage);
+createScreen(startMessage);
+
+createControls();
 
 createBox();
 
 // ===============EVENT LISTENERS=================
 
-selectFormRef.addEventListener('submit', onStartBtnClick);
 boxRef.addEventListener('click', onBoxClick);
 
 // ==================FUNCTIONS====================
 
-function createControls(entry) {
-  controlsRef.innerHTML = `<button class="btn btn--restart" type="button">Restart</button>
-<div class="screen"><span class="screen__text">${entry}</span></div>`;
+function createScreen(entry) {
+  heroRef.innerHTML = `<h1 class="hero__heading">TIC-TAC-TOE</h1><div class="hero__screen"><span class="screen__text">${entry}</span></div>`;
+  return (screenText = document.querySelector('.screen__text'));
+}
+
+function createControls() {
+  controlsRef.innerHTML = `<form class="select"><ul class="select__field list"><li class="select__item"><label class="select__label"><input class="select__input visually-hidden" type="radio" name="players" value="one" checked /><span class="select__radio"></span> 1 player</label></li><li class="select__item"><label class="select__label"><input class="select__input visually-hidden" type="radio" name="players" value="two" /><span class="select__radio"></span>2 players</label></li></ul><button class="select__btn btn" type="submit">Start</button></form><button class="controls__btn btn btn--restart" type="button">Restart</button>`;
+  const selectFormRef = document.querySelector('.select');
+  selectFormRef.addEventListener('submit', onStartBtnClick);
   const restartBtn = document.querySelector('.btn--restart');
   restartBtn.addEventListener('click', onRestart);
-  return (screenText = document.querySelector('.screen__text'));
 }
 
 function createBox() {
   for (let i = 1; i <= 9; i += 1) {
-    boxMarkup += `<div class="item" data-id="${i}"></div>`;
+    boxMarkup += `<div class="field__cell" data-id="${i}"></div>`;
     cells.push(i);
   }
   console.log('cells =', cells);
@@ -96,64 +104,72 @@ function onBoxClick(e) {
 
   if (player === 'X') {
     cellRef.style.backgroundColor = 'teal';
-    createControls(`Player X plays position ${cellPosition}`);
+    createScreen(`Player X plays position ${cellPosition}`);
     turnsX.push(Number(cellPosition));
     let result = turnsX.length < 3 ? false : isWinner(winCombos, turnsX);
     if (result) {
-      createControls(xPlayerAlert);
+      createScreen(xPlayerAlert);
       setTimeout(() => {
         alert(xPlayerAlert);
         onRestart();
-        return;
       }, 300);
+      return;
     }
 
     player = 'O';
 
     if (playersNum === 'one') {
       const leftCells = cells.filter(cell => !turnsX.includes(cell) && !turnsO.includes(cell));
+      if (leftCells.length === 0) {
+        createScreen(drawGameAlert);
+        setTimeout(() => {
+          alert(drawGameAlert);
+          onRestart();
+        }, 300);
+        return;
+      }
       maxCell = Math.max(...leftCells);
       minCell = Math.min(...leftCells);
       do {
         positionNumberO = Math.round(Math.random() * (maxCell - minCell) + minCell);
       } while (turnsX.includes(positionNumberO) || turnsO.includes(positionNumberO));
+      cellRef = document.querySelector(`.field__cell[data-id="${positionNumberO}"]`);
 
       setTimeout(() => {
-        cellRef = document.querySelector(`.item[data-id="${positionNumberO}"]`);
         console.log('this is cellRef', cellRef);
         cellRef.style.backgroundColor = 'gold';
         cellRef.textContent = player;
-        createControls(`Player O plays position ${positionNumberO}`);
+        createScreen(`Player O plays position ${positionNumberO}`);
         turnsO.push(positionNumberO);
         let result = turnsO.length < 3 ? false : isWinner(winCombos, turnsO);
 
         if (result) {
-          createControls(oPlayerAlert);
+          createScreen(oPlayerAlert);
           setTimeout(() => {
             alert(oPlayerAlert);
             onRestart();
-            return;
           }, 300);
+          return;
         }
-      }, 500);
+      }, 400);
       setTimeout(() => {
         player = 'X';
-        return;
-      }, 500);
+      }, 400);
+      return;
     }
   } else {
     if (playersNum === 'two') {
       cellRef.style.backgroundColor = 'gold';
-      createControls(`Player O plays position ${cellPosition}`);
+      createScreen(`Player O plays position ${cellPosition}`);
       turnsO.push(Number(cellPosition));
       let result = turnsO.length < 3 ? false : isWinner(winCombos, turnsO);
       if (result) {
-        createControls(oPlayerAlert);
+        createScreen(oPlayerAlert);
         setTimeout(() => {
           alert(oPlayerAlert);
           onRestart();
-          return;
         }, 300);
+        return;
       }
       player = 'X';
     }
@@ -172,5 +188,5 @@ function onRestart() {
   playersNum = '';
   positionNumberO = 0;
 
-  createControls(startMessage);
+  createScreen(startMessage);
 }

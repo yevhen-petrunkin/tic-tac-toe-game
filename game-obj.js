@@ -10,9 +10,11 @@ export const ttcGame = {
     [3, 5, 7],
   ],
 
-  startMessage: 'Please, select players before start',
+  startMessage: 'Please, select players and press "Start"',
   startGameMessage: 'New Game Player X Starts',
-  undefinedPlayersMessage: 'You have not selected players! Please, do it before start',
+  undefinedPlayersMessage:
+    'You have NOT selected players! Please, select players and press "Start"',
   xPlayerAlert: 'Player X Wins!',
   oPlayerAlert: 'Player O Wins!',
+  drawGameAlert: 'You draw the game!',
 };
